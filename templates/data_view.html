@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados de Cliques e Compras</title>
+</head>
+<body>
+    <h1>Dados de Cliques</h1>
+    <div id="clicks"></div>
+
+    <h1>Dados de Compras</h1>
+    <div id="purchases"></div>
+
+    <script>
+        async function fetchData() {
+            const clickResponse = await fetch('/get_clicks');
+            const clicks = await clickResponse.json();
+            document.getElementById("clicks").innerHTML = clicks.map(click => `
+                <div>
+                    <p>fbclid: ${click.fbclid}</p>
+                    <p>Timestamp: ${click.timestamp}</p>
+                </div>
+            `).join('');
+
+            const purchaseResponse = await fetch('/get_purchases');
+            const purchases = await purchaseResponse.json();
+            document.getElementById("purchases").innerHTML = purchases.map(purchase => `
+                <div>
+                    <p>fbclid: ${purchase.fbclid}</p>
+                    <p>Valor: ${purchase.purchase_value}</p>
+                    <p>Moeda: ${purchase.currency}</p>
+                    <p>Timestamp: ${purchase.timestamp}</p>
+                </div>
+            `).join('');
+        }
+
+        // Carrega os dados ao carregar a página
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
